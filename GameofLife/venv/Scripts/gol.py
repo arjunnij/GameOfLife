@@ -41,7 +41,6 @@ class game_of_life:
         self.drag = False
 
     def initialize_board(self):
-        self.screen.fill(pg.Color(BACKGROUND_COLOR))
         self.start_button = pg.draw.rect(self.screen, pg.Color(START_BUTTON_COLOR), pg.Rect(self.START_BUTTON_X, self.START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT))
         y = self.BOARD_TOP_Y
 
@@ -64,11 +63,6 @@ class game_of_life:
                 self.drag = True
                 mouse_position = pg.mouse.get_pos()
 
-                if (self.start_button.collidepoint(mouse_position) and self.screen.get_at(
-                        (mouse_position[0], mouse_position[1])) == pg.Color(START_BUTTON_COLOR)):
-                    pg.draw.rect(self.screen, pg.Color(STOP_BUTTON_COLOR), self.start_button)
-                    self.started_simulation = True
-
                 for row in self.board:
                     for cell in row:
                         if (cell.collidepoint(mouse_position)):
@@ -77,11 +71,20 @@ class game_of_life:
 
             if event.type == pg.MOUSEBUTTONUP:
                 self.drag = False
+                if (self.start_button.collidepoint(mouse_position) and self.screen.get_at(
+                        (mouse_position[0], mouse_position[1])) == pg.Color(START_BUTTON_COLOR)):
+                    pg.draw.rect(self.screen, pg.Color(STOP_BUTTON_COLOR), self.start_button)
+                    self.started_simulation = True
+
+                elif (self.start_button.collidepoint(mouse_position)):
+                    pg.draw.rect(self.screen, pg.Color(START_BUTTON_COLOR), self.start_button)
+                    self.started_simulation = False
+                    self.drag = False
 
     def return_alive(self, row, col):
         num_neighbors_alive = 0
         num_neighbors_dead = 0
-
+        
         if (row > 0):
             if (self.board[row - 1][col].alive):
                 num_neighbors_alive += 1
@@ -153,23 +156,28 @@ class game_of_life:
                     if(num_neighbors_alive == 3):
                         self.board[row][col].alive_next = True
     def run(self):
-        # initialize the board
+        self.screen.fill(pg.Color(BACKGROUND_COLOR))
+        font = pg.font.SysFont('Comic Sans MS', 30)
+        text_surface = font.render('Conway\'s Game of Life', False, pg.Color("white"))
+        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, self.BOARD_TOP_Y - text_surface.get_height()))
+        self.screen.blit(text_surface, text_rect)
         self.initialize_board()
         pg.display.flip()
 
-        while not self.started_simulation and not self.exited:
+        while not self.exited:
+            while not self.started_simulation and not self.exited:
                 self.handle_events()
                 self.update_board()
                 pg.display.flip()
 
-        clock = pg.time.Clock()
+            clock = pg.time.Clock()
 
-        while self.started_simulation and not self.exited:
-            self.handle_events()
-            self.conways_rules()
-            self.update_board()
-            pg.time.wait(1000)
-            pg.display.flip()
+            while self.started_simulation and not self.exited:
+                self.handle_events()
+                self.conways_rules()
+                self.update_board()
+                pg.time.wait(100)
+                pg.display.flip()
 
     def update_board(self):
         for row in self.board:
@@ -181,8 +189,6 @@ class game_of_life:
                 else:
                     pg.draw.rect(self.screen, pg.Color(CELL_COLOR), cell)
                     cell.alive = False
-
-
 
 if __name__ == "__main__":
     game = game_of_life()
