@@ -99,7 +99,6 @@ class game_of_life:
     # checks the neighbors of the given cell and returns the number of neighbors which are dead/alive
     def return_alive(self, row, col):
         num_neighbors_alive = 0
-        num_neighbors_dead = 0
 
         # (0, 0) is at the top-left part of the board
         if (row > 0):
@@ -107,37 +106,27 @@ class game_of_life:
             if (self.board[row - 1][col].alive):
                 num_neighbors_alive += 1
 
-            elif (not self.board[row - 1][col].alive):
-                num_neighbors_dead += 1
-
             # if we aren't in the leftmost column (and the first row), let's check the top-left diagonal cell
             if (col > 0):
                 if (self.board[row - 1][col - 1].alive):
                     num_neighbors_alive += 1
-                else:
-                    num_neighbors_dead += 1
 
             # if we aren't in the rightmost column (and the first row), let's check the top-right diagonal cell
             if (col < BOARD_WIDTH - 1):
                 if (self.board[row - 1][col + 1].alive):
                     num_neighbors_alive += 1
-                else:
-                    num_neighbors_dead += 1
+
         if (col > 0):
             # check cell directly to the left if we aren't in the leftmost col
 
             if (self.board[row][col - 1].alive):
                 num_neighbors_alive += 1
-            elif (not self.board[row][col - 1].alive):
-                num_neighbors_dead += 1
 
             if (row < BOARD_HEIGHT - 1):
                 # check cell in the bottom left if we aren't in the last row
 
                 if (self.board[row + 1][col - 1].alive):
                     num_neighbors_alive += 1
-                else:
-                    num_neighbors_dead += 1
 
         if (col < BOARD_WIDTH - 1):
             # check cell directly to the right if we aren't in the rightmost column
@@ -145,44 +134,33 @@ class game_of_life:
             if (self.board[row][col + 1].alive):
                 num_neighbors_alive += 1
 
-            elif (not self.board[row][col + 1].alive):
-                num_neighbors_dead += 1
-
             if (row < BOARD_HEIGHT - 1):
-
                 # check cell in the bottom right
 
                 if (self.board[row + 1][col + 1].alive):
                     num_neighbors_alive += 1
-                else:
-                    num_neighbors_dead += 1
 
         if (row < BOARD_HEIGHT - 1):
-
             # check cell directly underneath
 
             if (self.board[row + 1][col].alive):
                 num_neighbors_alive += 1
-            elif (not self.board[row + 1][col].alive):
-                num_neighbors_dead += 1
 
-        return (num_neighbors_alive, num_neighbors_dead)
+        return num_neighbors_alive
 
     # updates the next state of each cell according to the rules of Conway's Game of Life
     # which are available here: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     def conways_rules(self):
         for row in range(0, BOARD_WIDTH):
             for col in range(0, BOARD_HEIGHT):
-                alive_and_dead = self.return_alive(row, col)
-                num_neighbors_alive = alive_and_dead[0]
-                num_neighbors_dead = alive_and_dead[1]
+                num_neighbors_alive = self.return_alive(row, col)
 
                 if (self.board[row][col].alive):
                     if (num_neighbors_alive == POPULATION_LIMIT - 1 or num_neighbors_alive == POPULATION_LIMIT):
                         self.board[row][col].alive_next = True
                     elif (num_neighbors_alive > POPULATION_LIMIT):
                         self.board[row][col].alive_next = False
-                    elif (num_neighbors_dead >= POPULATION_LIMIT - 1):
+                    elif (num_neighbors_alive < POPULATION_LIMIT - 1):
                         self.board[row][col].alive_next = False
                 else:
                     if (num_neighbors_alive == POPULATION_LIMIT):
@@ -217,7 +195,6 @@ class game_of_life:
         for row in self.board:
             for cell in row:
                 if (cell.alive_next == True):
-                    # print("cell should be alive next")
                     pg.draw.rect(self.screen, pg.Color(ALIVE_COLOR), cell)
                     cell.alive = True
                 else:
