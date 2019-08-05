@@ -6,7 +6,7 @@ John Conway's Game of Life is a game which is based on simple mathethematical ru
 
 - if a cell is alive, it stays alive if it has two or three neighbors which are alive
 - if a cell is alive, it dies if it has more than three neighbors (overpopulation) 
-- if a cell is alive, it dies if it has less than two neighbors (isolation) 
+- if a cell is alive, it dies if it has less than two neighbors (starvation) 
 - if a cell is dead, it becomes alive if it has three neighbors (reproduction) 
 
 Implementation 
