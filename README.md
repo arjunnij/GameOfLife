@@ -24,4 +24,9 @@ pip -r freeze requirements.txt
 
 If you have another version of PyGame installed on your machine, it will likely be necessary to create a virtual environment first to ensure your other programs don't break. 
 
+Further Reading: 
+
+http://web.mit.edu/sp.268/www/2010/lifeSlides.pdf
+https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
+
 ![](gol.gif)
