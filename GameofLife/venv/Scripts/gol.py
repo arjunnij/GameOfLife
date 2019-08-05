@@ -13,7 +13,6 @@ ALIVE_COLOR = "yellow"
 START_BUTTON_COLOR = "green"
 START_BUTTON_WIDTH = 100
 START_BUTTON_HEIGHT = 50
-START_BUTTON_Y = 100
 STOP_BUTTON_COLOR = "red"
 
 class Cell(pg.Rect):
@@ -28,10 +27,13 @@ class Cell(pg.Rect):
 class game_of_life:
     def __init__(self):
         pg.init()
-        self.screen = pg.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
+        self.screen = pg.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT]) # create the screen with the specified width and height
         self.started_simulation = False
         self.exited = False
         self.board = []
+
+        # do some simple math to calculate the relative offsets of the start button and board
+
         self.BOARD_WIDTH_IN_PIXELS = (BOARD_WIDTH * (CELL_WIDTH + BORDER_THICKNESS))
         self.BOARD_HEIGHT_IN_PIXELS = (BOARD_HEIGHT * (CELL_HEIGHT + BORDER_THICKNESS))
         self.BOARD_TOP_X = self.screen.get_width() / 2 -  self.BOARD_WIDTH_IN_PIXELS / 2
@@ -40,6 +42,7 @@ class game_of_life:
         self.START_BUTTON_Y = self.BOARD_TOP_Y + self.BOARD_HEIGHT_IN_PIXELS + 20
         self.drag = False
 
+    # initialize the grid
     def initialize_board(self):
         self.start_button = pg.draw.rect(self.screen, pg.Color(START_BUTTON_COLOR), pg.Rect(self.START_BUTTON_X, self.START_BUTTON_Y, START_BUTTON_WIDTH, START_BUTTON_HEIGHT))
         y = self.BOARD_TOP_Y
@@ -55,6 +58,7 @@ class game_of_life:
 
             y += (CELL_HEIGHT + BORDER_THICKNESS)
 
+    # checks for events in the event queue (mouse down/up and exit)
     def handle_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -81,10 +85,11 @@ class game_of_life:
                     self.started_simulation = False
                     self.drag = False
 
+    # checks the neighbors of the given cell and returns the number of neighbors which are dead/alive
     def return_alive(self, row, col):
         num_neighbors_alive = 0
         num_neighbors_dead = 0
-        
+
         if (row > 0):
             if (self.board[row - 1][col].alive):
                 num_neighbors_alive += 1
@@ -137,6 +142,8 @@ class game_of_life:
 
         return (num_neighbors_alive, num_neighbors_dead)
 
+    # updates the next state of each cell according to the rules of Conway's Game of Life
+    # which are available here: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     def conways_rules(self):
         for row in range (0, BOARD_WIDTH):
             for col in range (0, BOARD_HEIGHT):
@@ -155,6 +162,9 @@ class game_of_life:
                 else:
                     if(num_neighbors_alive == 3):
                         self.board[row][col].alive_next = True
+
+
+    # main run loop of the program
     def run(self):
         self.screen.fill(pg.Color(BACKGROUND_COLOR))
         font = pg.font.SysFont('Comic Sans MS', 30)
@@ -178,7 +188,7 @@ class game_of_life:
                 self.update_board()
                 pg.time.wait(100)
                 pg.display.flip()
-
+                
     def update_board(self):
         for row in self.board:
             for cell in row:
