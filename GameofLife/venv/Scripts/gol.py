@@ -152,8 +152,8 @@ class game_of_life:
     # updates the next state of each cell according to the rules of Conway's Game of Life
     # which are available here: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     def conways_rules(self):
-        for row in range(0, BOARD_WIDTH):
-            for col in range(0, BOARD_HEIGHT):
+        for row in range(0, BOARD_HEIGHT):
+            for col in range(0, BOARD_WIDTH):
                 num_neighbors_alive = self.return_alive(row, col)
 
                 if (self.board[row][col].alive):
