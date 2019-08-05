@@ -22,8 +22,6 @@ START_BUTTON_FONT_SIZE = 30
 START_BUTTON_TEXT_COLOR = "white"
 STOP_BUTTON_COLOR = "red"
 
-
-
 class cell(pg.Rect):
     def __init__(self, x, y):
         self.x = x
