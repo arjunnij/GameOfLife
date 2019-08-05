@@ -16,12 +16,11 @@ This implemenation was created uisng PyGame, a useful Python gaming library. A g
 Installation 
 
 To run this game, clone the repo and install the required dependencies (listed in requirements.txt) using: 
-
-''' 
+``` bash 
 
 pip -r freeze requirements.txt 
 
-'''
+```
 
 
 ![](gol.gif)
