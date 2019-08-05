@@ -22,6 +22,16 @@ pip -r freeze requirements.txt
 
 ```
 
+To run, simply call your Python3 exectuable using (on my Windows computer using git bash, for instance): 
+
+``` bash 
+
+./python.exe gol.py
+
+```
+
+A screen should open up, as shown below. 
+
 If you have another version of PyGame installed on your machine, it will likely be necessary to create a virtual environment first to ensure your other programs don't break. 
 
 Further Reading: 
