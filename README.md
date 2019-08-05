@@ -22,7 +22,7 @@ pip -r freeze requirements.txt
 
 ```
 
-To run, simply call your Python3 exectuable using (on my Windows computer using git bash, for instance): 
+To run, simply call your Python3 exectuable using (on my Windows computer using Git Bash, for instance): 
 
 ``` bash 
 
