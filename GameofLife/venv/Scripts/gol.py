@@ -13,6 +13,7 @@ BACKGROUND_COLOR = "blue"
 CELL_COLOR = "grey"
 ALIVE_COLOR = "yellow"
 POPULATION_LIMIT = 3
+DELAY_BETWEEN_UPDATES = 100 # ms delay between each update of the board
 
 START_BUTTON_COLOR = "green"
 START_BUTTON_WIDTH = 100
@@ -188,7 +189,7 @@ class game_of_life:
                 self.handle_events()
                 self.conways_rules()
                 self.update_board()
-                pg.time.wait(100)
+                pg.time.wait(DELAY_BETWEEN_UPDATES)
                 pg.display.flip()
 
     def update_board(self):
