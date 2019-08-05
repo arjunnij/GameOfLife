@@ -41,6 +41,7 @@ class game_of_life:
         self.started_simulation = False
         self.exited = False
         self.board = []
+        self.Debug = False
 
         # do some simple math to calculate the relative offsets of the start button and board
 
@@ -51,6 +52,9 @@ class game_of_life:
         self.START_BUTTON_X = (self.BOARD_TOP_X + (self.BOARD_WIDTH_IN_PIXELS / 2) - START_BUTTON_WIDTH / 2)
         self.START_BUTTON_Y = self.BOARD_TOP_Y + self.BOARD_HEIGHT_IN_PIXELS + START_BUTTON_OFFSET
         self.drag = False
+
+    def set_debug_mode(self, debug_mode=False):
+        self.Debug = debug_mode
 
     # initialize the grid
     def initialize_board(self):
@@ -152,14 +156,16 @@ class game_of_life:
     # updates the next state of each cell according to the rules of Conway's Game of Life
     # which are available here: https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
     def conways_rules(self):
-        for row in range(0, BOARD_WIDTH):
-            for col in range(0, BOARD_HEIGHT):
+        for row in range(0, BOARD_HEIGHT):
+            for col in range(0, BOARD_WIDTH):
                 num_neighbors_alive = self.return_alive(row, col)
+                if(self.Debug): print("num neighbors alive for %d %d is %d " % (row, col, num_neighbors_alive))
 
                 if (self.board[row][col].alive):
                     if (num_neighbors_alive == POPULATION_LIMIT - 1 or num_neighbors_alive == POPULATION_LIMIT):
                         self.board[row][col].alive_next = True
                     elif (num_neighbors_alive > POPULATION_LIMIT):
+                        if(self.Debug): print("population limit exceeded for %d %d" % (row, col))
                         self.board[row][col].alive_next = False
                     elif (num_neighbors_alive < POPULATION_LIMIT - 1):
                         self.board[row][col].alive_next = False
@@ -169,29 +175,34 @@ class game_of_life:
 
     # main run loop of the program
     def run(self):
-        self.screen.fill(pg.Color(BACKGROUND_COLOR))
-        font = pg.font.SysFont('Comic Sans MS', START_BUTTON_FONT_SIZE)
-        text_surface = font.render('Conway\'s Game of Life', False, pg.Color(START_BUTTON_TEXT_COLOR))
-        text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, self.BOARD_TOP_Y - text_surface.get_height()))
-        self.screen.blit(text_surface, text_rect)
+        if not self.Debug:
+            self.screen.fill(pg.Color(BACKGROUND_COLOR))
+            font = pg.font.SysFont('Comic Sans MS', START_BUTTON_FONT_SIZE)
+            text_surface = font.render('Conway\'s Game of Life', False, pg.Color(START_BUTTON_TEXT_COLOR))
+            text_rect = text_surface.get_rect(center=(SCREEN_WIDTH / 2, self.BOARD_TOP_Y - text_surface.get_height()))
+            self.screen.blit(text_surface, text_rect)
+
         self.initialize_board()
-        pg.display.flip()
+        if not self.Debug:
+           pg.display.flip()
 
-        while not self.exited:
-            while not self.started_simulation and not self.exited:
-                self.handle_events()
-                self.update_board()
-                pg.display.flip()
+        if not self.Debug:
+            while not self.exited:
+                while not self.started_simulation and not self.exited:
+                    self.handle_events()
+                    self.update_board()
+                    pg.display.flip()
 
-            clock = pg.time.Clock()
+                clock = pg.time.Clock()
 
-            while self.started_simulation and not self.exited:
-                self.handle_events()
-                self.conways_rules()
-                self.update_board()
-                pg.time.wait(DELAY_BETWEEN_UPDATES)
-                pg.display.flip()
+                while self.started_simulation and not self.exited:
+                    self.handle_events()
+                    self.conways_rules()
+                    self.update_board()
+                    pg.time.wait(DELAY_BETWEEN_UPDATES)
+                    pg.display.flip()
 
+    # update each cell on the board to its next state
     def update_board(self):
         for row in self.board:
             for cell in row:
