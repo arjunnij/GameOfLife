@@ -27,6 +27,7 @@ If you have another version of PyGame installed on your machine, it will likely 
 Further Reading: 
 
 http://web.mit.edu/sp.268/www/2010/lifeSlides.pdf
+
 https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 
 ![](gol.gif)
